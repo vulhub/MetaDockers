@@ -96,7 +96,7 @@
                                     <div id="collapseOne" class="panel-collapse collapse in">
                                         <div class="panel-body">
                                             Vulhub - Some Docker-Compose files for vulnerabilities environment , Github:
-                                            <a target="_blank" href="https://github.com/phith0n/vulhub">https://github.com/phith0n/vulhub</a><br>
+                                            <a target="_blank" href="https://github.com/vulhub/vulhub">https://github.com/vulhub/vulhub</a><br>
                                             The Current Version:
                                             {% if vh_version == ".git" %}
                                             <span class="label label-warning">Not Found vulhub/.git/ dir</span>
@@ -157,7 +157,7 @@
             var l = Ladda.create( document.querySelector( '.check-update' ) );
             l.toggle();
             var commitsSha = [];
-            $.getJSON("https://api.github.com/repos/phith0n/vulhub/commits",function (result) {
+            $.getJSON("https://api.github.com/repos/vulhub/vulhub/commits",function (result) {
                $.each(result,function (i) {
                    var sha_tmp = String(result[i].sha).substring(0,7);
                    commitsSha.push(sha_tmp);
