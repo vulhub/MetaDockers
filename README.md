@@ -10,6 +10,7 @@
 > 配置vulhub path和docker api开关，docker若启动且加入环境变量那么默认即可docker.from_env()：
 MetaDockers/controller/lib/config.conf
 
+sudo pip install -r requirements.txt
 cd MetaDockers/
 python manage.py runserver 8000
 ## Index:
