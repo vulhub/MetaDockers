@@ -21,7 +21,7 @@ python manage.py runserver 8000
 ## Vulhubs:
 > 这个启动项没写，后期会直接拆分docker-compose包融合进去，还有各个靶场的README未分配。
 
-![](http://7xiw31.com1.z0.glb.clouddn.com/egwrg.png)
+![](http://7xiw31.com1.z0.glb.clouddn.com/dsfwqe221.png)
 ## Images:
 ![](http://7xiw31.com1.z0.glb.clouddn.com/regregeh.png)
 > 还有这个images的启动参数有50多个。。。挨个测试心态炸了，好心人可以按[api文档](http://docker-py.readthedocs.io/en/stable/containers.html)加下哈哈（涉及controller/lib/dockerOperation.py的image_operation函数和templates/images.html的$(".btn-run").click），没人的话有空我也会加上：
