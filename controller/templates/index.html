@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MetaDockers</title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- DataTables CSS -->
+    <link href="/static/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="/static/dist/css/controller.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+    <div>
+
+        <nav class="navbar navbar-light bg-faded">
+          <a class="navbar-brand" href="/index/">MetaDockers</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index/"><i class="fa fa-home fa-1x"></i> Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/vulhubs/"><i class="fa fa-user-secret fa-1x"></i> Vulhubs</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/images/"><i class="fa fa-server fa-1x"></i> Images</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/networks/"><i class="fa fa-sitemap fa-1x"></i> Networks</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/volumes/"><i class="fa fa-file-archive-o fa-1x"></i> Volumes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/containers/"><i class="fa fa-cubes fa-1x"></i> Containers</a>
+            </li>
+          </ul>
+
+        <nav class="collapse navbar-collapse" id=bs-navbar>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/info/"><i class="fa fa-info-circle fa-1x"></i> Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about/"><i class="fa fa-copyright fa-1x"></i> About</a>
+                </li>
+            </ul>
+              </nav>
+        </nav>
+    </div>
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><i class="fa fa-home fa-1x"></i> Dashboard</h1>
+                </div>
+            </div>
+            <div class="row">
+
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style='cursor:pointer;' onclick="window.location.href='/images/'">
+                <div class="offer offer-success">
+                    <div class="shape">
+                        <div class="shape-text">
+                            <span class="fa fa-server"></span>
+                        </div>
+                    </div>
+                    <div class="offer-content">
+                        <h3 class="lead">
+                             Images : <label class="label label-success"> {{ images_num }}</label>
+                        </h3>
+                        <p class="fa fa-pie-chart"> {{ images_size }}</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style='cursor:pointer;' onclick="window.location.href='/containers/'">
+                <div class="offer offer-primary">
+                    <div class="shape">
+                        <div class="shape-text">
+                            <span class="fa fa-cubes"></span>
+                        </div>
+                    </div>
+                    <div class="offer-content">
+                        <h3 class="lead">
+                             Containers : <label class="label label-primary"> {{ base_info.Containers }}</label>
+                        </h3>
+                        <p class="fa fa-heartbeat"> {{ base_info.ContainersRunning }} Running</p>
+                    </div>
+                </div>
+            </div>
+                <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style='cursor:pointer;' onclick="window.location.href='/networks/'">
+                <div class="offer offer-warning">
+                    <div class="shape">
+                        <div class="shape-text">
+                            <span class="fa fa-sitemap"></span>
+                        </div>
+                    </div>
+                    <div class="offer-content">
+                        <h3 class="lead">
+                        Networks: <label class="label label-warning"> {{ networks_sum }}</label>
+                        </h3>
+                        <p class="fa fa-sitemap"></p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3" style='cursor:pointer;' onclick="window.location.href='/volumes/'">
+                <div class="offer offer-info">
+                    <div class="shape">
+                        <div class="shape-text">
+                            <span class="fa fa-file-archive-o"></span>
+                        </div>
+                    </div>
+                    <div class="offer-content">
+                        <h3 class="lead">
+                            Volumes : <label class="label label-info"> {{ volumes_sum }}</label>
+                        </h3>
+
+                        <p class="fa fa-hdd-o"></p>
+                       </div>
+                    </div>
+                </div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><span class="fa fa-dashboard"></span> Base Info</div>
+                <table class="table table-striped">
+                    <tr>
+                        <td>CPU</td>
+                        <td>{{ base_info.cpu }}</td>
+                    </tr>
+                    <tr>
+                        <td>Memory</td>
+                        <td>{{ base_info.MemSize }}</td>
+                    </tr>
+                    <tr>
+                        <td>Docker Version</td>
+                        <td>{{ base_info.version }}</td>
+                    </tr>
+                </table>
+            </div>
+    </div>
+
+    <!-- jQuery -->
+    <script src="/static/jquery/jquery.min.js"></script>
+
+    <script>
+
+    </script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="/static/metisMenu/metisMenu.min.js"></script>
+
+
+</body>
+
+</html>

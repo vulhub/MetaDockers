@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <title>MetaDockers</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/dist/css/controller.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <script src="/static/jquery/jquery.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+
+</head>
+
+<body>
+
+    <div>
+
+        <nav class="navbar navbar-light bg-faded">
+          <a class="navbar-brand" href="/index/">MetaDockers</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index/"><i class="fa fa-home fa-1x"></i> Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/vulhubs/"><i class="fa fa-user-secret fa-1x"></i> Vulhubs</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/images/"><i class="fa fa-server fa-1x"></i> Images</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/networks/"><i class="fa fa-sitemap fa-1x"></i> Networks</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/volumes/"><i class="fa fa-file-archive-o fa-1x"></i> Volumes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/containers/"><i class="fa fa-cubes fa-1x"></i> Containers</a>
+            </li>
+          </ul>
+
+        <nav class="collapse navbar-collapse" id=bs-navbar>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/info/"><i class="fa fa-info-circle fa-1x"></i> Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about/"><i class="fa fa-copyright fa-1x"></i> About</a>
+                </li>
+            </ul>
+              </nav>
+        </nav>
+    </div>
+
+    <div class="modal fade" id="addVolumeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal1-title" id="exampleModalLabel">Add New Volume</h4>
+        </div>
+        <div class="modal-body add-body">
+          <form>
+
+            <div class="form-group">
+              <label class="control-label" >Driver: <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Name of the volume. If not specified, the engine generates a name."></a></label><br>
+              <input type="radio" class="new-volume-driver" value="local" checked>&nbsp;local<br><br>
+              <label class="control-label">Name <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Name of the driver used to create the volume."></a></label>
+              <input type="text" class="form-control new-volume-name" placeholder="myBucketVolume"><br>
+
+                <div id="optionsInput">
+                  <label class="control-label">Driver Options:
+                      <span class="label label-default label-options" style="cursor:pointer;"><i class="fa fa-plus-circle"></i> add options</span>
+                      <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Driver options as a key-value dictionary."></a></label>
+                  <input type="text" class="form-control new-volume-driver-opt" placeholder="device=tmpfs">
+                </div>
+                <br>
+
+                <div id="labelsInput">
+                  <label class="control-label">Labels:
+                      <span class="label label-default label-labels" style="cursor:pointer;"><i class="fa fa-plus-circle"></i> add labels</span>
+                      <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Labels to set on the volume."></a></label>
+                  <input type="text" class="form-control new-volume-labels" placeholder="key=value">
+                </div>
+                <br>
+
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="add-submit btn btn-primary">Submit</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <div class="modal fade" id="rmVolumeModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+					&times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">Confirm the deletion these volumes?</h4>
+			</div>
+			<div class="modal-body rm-body"></div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close
+				</button>
+				<button type="button" class="rm-submit btn btn-primary">Confirm</button>
+			</div>
+		</div>
+	</div>
+    </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><i class="fa fa-file-archive-o fa-1x"></i> Volumes</h1>
+                    <button class="btn btn-primary" data-toggle='modal' data-target='#addVolumeModal'><i class="fa fa-plus fa-1x"></i> Add Volume</button>
+                    <button class="btn btn-danger" data-toggle='modal' data-target='#rmVolumeModal'><i class="fa fa-trash fa-1x"></i> Remove</button>
+                </div>
+            </div>
+                <div class="panel-body">
+                    <table width="100%" class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="checkAll" name="checkAll" /></th>
+                                <th>Name <i class="fa fa-tags fa-1x"></i></th>
+                                <th>Driver <i class="fa fa-cog fa-1x"></i></th>
+                                <th>MountPoint <i class="fa fa-folder-open fa-1x"></i></th>
+                                <th>Scope <i class="fa fa-map-marker fa-1x"></i></th>
+                            </tr>
+                        </thead>
+                        <tbody id="volumes_line"></tbody>
+                    </table>
+                </div>
+            </div>
+
+    <script>
+        var dc_volumes = {{ volumes|safe }}
+        $(".btn-danger").prop('disabled' ,true);
+        $(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+        function checkboxUseSum() {
+            var checkChild = $("input[name='checkItem']");
+            var operList = [];
+            for(var i=0;i<checkChild.length;i++){
+                if(checkChild[i].checked == true){
+                    operList.push(checkChild[i].value);
+                }
+            }
+            return operList
+        }
+        
+        function bottonState() {
+            var operList = checkboxUseSum();
+            $(".btn-danger").prop('disabled' , operList.length > 0 ? false : true);
+        }
+
+        function removeHtmls(htmls) {
+            htmls.parentNode.remove();
+        }
+
+        $().ready(function () {
+            for(var i=0;i<dc_volumes.length;i++){
+                var name_tmp = dc_volumes[i].Name.length > 10 ? dc_volumes[i].Name.substring(0,10) + " ..." : dc_volumes[i].Name;
+                $("#volumes_line").append("<tr><td><input type='checkbox' name='checkItem' onclick='bottonState()' value='" + dc_volumes[i].Name +
+                                        "'/></td><td>" + name_tmp +
+                                        "</td><td>" + dc_volumes[i].Driver +
+                                        "</td><td>" + dc_volumes[i].Mountpoint +
+                                        "</td><td>" + dc_volumes[i].Scope + "</td></tr>");
+            }
+
+
+            $(".label-options").click(function () {
+                $("#optionsInput").append("<div><br><input type=text' style='width: 90%;display: inline' class='form-control new-volume-driver-opt' placeholder='device=tmpfs'>&emsp;" +
+                        "<button class='btn btn-sm btn-danger' type='button' onclick='removeHtmls(this)'><i class='fa fa-trash' aria-hidden='true'></i></button><br></div>");
+            });
+
+            $(".label-labels").click(function () {
+               $("#labelsInput").append("<div><br><input type=text' style='width: 90%;display: inline' class='form-control new-volume-labels' placeholder='key=value'>&emsp;" +
+                        "<button class='btn btn-sm btn-danger' type='button' onclick='removeHtmls(this)'><i class='fa fa-trash' aria-hidden='true'></i></button><br></div>")
+            });
+
+
+            $(".add-submit").click(function () {
+                var results_attrs = {};
+                results_attrs['newName'] = $(".new-volume-name").val();
+                results_attrs['newDriver'] = $(".new-volume-driver").val();
+                results_attrs['newDriverOpt'] = [];
+                results_attrs['newLabels'] = [];
+                var new_volume_labels = $(".new-volume-labels");
+                var new_volume_driver_opt = $(".new-volume-driver-opt");
+                for(var i=0;i<new_volume_labels.length;i++){
+                    results_attrs['newLabels'].push(new_volume_labels[i].value);
+                }
+                for(var j=0;j<new_volume_driver_opt.length;j++){
+                    results_attrs['newDriverOpt'].push(new_volume_driver_opt[j].value);
+                }
+                $.ajax({
+                    url:"/volumes/",
+                    data:{opt:'add_volume', addDetail:JSON.stringify(results_attrs)},
+                    type:'POST',
+                    success:function(flag) {
+                        alert(flag);
+                        window.location.href = "/volumes/";
+                    }
+                });
+            });
+
+            $(".btn-danger").click(function () {
+                var insertBody = $(".rm-body");
+                insertBody.html("");
+                var delList = checkboxUseSum();
+                for(var i=0;i<delList.length;i++){
+                    insertBody.append("[" + i + "] " + delList[i] + "<br>");
+                }
+
+                $(".rm-submit").click(function () {
+                    $.ajax({
+                        url:"/volumes/",
+                        data:{opt:'rm_volume', rmList:JSON.stringify(delList)},
+                        type:'POST',
+                        success:function(flag) {
+                            if(flag == 'true'){
+                                alert("Remove Success!");
+                            }else{
+                                alert(flag);
+                            }
+                            window.location.href = "/volumes/";
+                        }
+                    });
+                });
+            });
+
+            var $thr = $('table thead tr');
+            var $tbr = $('table tbody tr');
+            var $checkAll = $thr.find('input');
+
+            $checkAll.click(function(event){
+                $tbr.find('input').prop('checked',$(this).prop('checked'));
+                bottonState();
+                event.stopPropagation();
+            });
+
+            $("#checkAll").click(function(){
+                $(this).find('input').click();
+
+            });
+
+            $tbr.find('input').click(function(event){
+                event.stopPropagation();
+            });
+
+            $tbr.click(function() {
+                $(this).find('input').click();
+            });
+
+
+        });
+    </script>
+</body>
+</html>

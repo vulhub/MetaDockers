@@ -1,0 +1,64 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header"><i class="fa fa-sitemap fa-1x"></i> Networks</h1>
+    </div>
+</div>
+
+<ul class="breadcrumb">
+      <li><a style="cursor:pointer;" onclick="loadNetworks()">Networks</a></li>
+      <li class="active" id="nwId"></li>
+</ul>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><span class="fa fa-cogs"></span> Network Options</div>
+    <table class="table table-striped">
+        <tbody id="detail-options"></tbody>
+    </table>
+</div><br>
+
+<div class="panel panel-default">
+    <div class="panel-heading"><span class="fa fa-cubes"></span> The Containers Being Used</div>
+    <table class="table table-striped">
+        <thead id="detail-contailers-thead">
+            <tr>
+                <th>Id <i class="fa fa-list-ol"></i></th>
+                <th>Name <i class="fa fa-tags"></i></th>
+                <th>IPv4 Address <i class="fa fa-map-marker"></i></th>
+                <th>IPv6 Address <i class="fa fa-map-marker"></i></th>
+                <th>Mac Address <i class="fa fa-map-marker"></i></th>
+            </tr>
+        </thead>
+        <tbody id="detail-containers"></tbody>
+    </table>
+</div>
+
+<script>
+    var nw_Detail = {{ nwDetail|safe }}
+    $("#nwId").text(nw_Detail.Id);
+
+    function loadContainer(csId) {
+        window.location.href = "/containers/?csId=" + csId;
+    }
+
+    $().ready(function () {
+        if(Object.keys(nw_Detail.options).length != 0) {
+            for (var i in nw_Detail.options) {
+                $("#detail-options").append("<tr><td>" + i + "</td><td>" + nw_Detail.options[i] + "</td></tr>");
+            }
+        }else{
+            $("#detail-options").append("<tr><td align='center'>None</td></tr>");
+        }
+
+        if(Object.keys(nw_Detail.containers).length != 0){
+            for(var x in nw_Detail.containers){
+                var idTmp = nw_Detail.containers[x].Id;
+                $("#detail-containers").append("<tr><td><a style='cursor:pointer;' onclick=loadContainer('" + idTmp + "')>" + idTmp +
+                        "</a></td><td>" + nw_Detail.containers[x].Name + "</td><td>" + nw_Detail.containers[x].IPv4 +
+                        "</td><td>" + nw_Detail.containers[x].IPv6 + "</td><td>" + nw_Detail.containers[x].Mac + "</td></tr>")
+            }
+        }else{
+            $("#detail-contailers-thead").remove();
+            $("#detail-containers").append("<tr><td align='center'>None</td></tr>");
+        }
+    })
+</script>

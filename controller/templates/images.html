@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MetaDockers</title>
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/dist/css/controller.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="/static/dist/css/ladda-themeless.min.css">
+    <script src="/static/jquery/jquery.js"></script>
+</head>
+
+<body>
+
+    <div>
+
+        <nav class="navbar navbar-light bg-faded">
+          <a class="navbar-brand" href="/index/">MetaDockers</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index/"><i class="fa fa-home fa-1x"></i> Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/vulhubs/"><i class="fa fa-user-secret fa-1x"></i> Vulhubs</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/images/"><i class="fa fa-server fa-1x"></i> Images</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/networks/"><i class="fa fa-sitemap fa-1x"></i> Networks</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/volumes/"><i class="fa fa-file-archive-o fa-1x"></i> Volumes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/containers/"><i class="fa fa-cubes fa-1x"></i> Containers</a>
+            </li>
+          </ul>
+
+        <nav class="collapse navbar-collapse" id=bs-navbar>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/info/"><i class="fa fa-info-circle fa-1x"></i> Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about/"><i class="fa fa-copyright fa-1x"></i> About</a>
+                </li>
+            </ul>
+              </nav>
+        </nav>
+    </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><i class="fa fa-server fa-1x"></i> Images</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Docker Images
+                        </div>
+                        <!-- /.panel-heading -->
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped" id="dataTables">
+                                <thead>
+                                    <tr>
+                                        <th>RepoTags <i class="fa fa-tags fa-1x"></i></th>
+                                        <th>Id <i class="fa fa-list-ol fa-1x"></i></th>
+                                        <th>Created <i class="fa fa-calendar fa-1x"></i></th>
+                                        <th>Size <i class="fa fa-database fa-1x"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="image_list"></tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+          <span class="sr-only">Close</span>
+        </button>
+        <h4 class="modal-title" id="myModalLabel"></h4>
+      </div>
+      <div class="modal-body">
+          <form>
+            <div class="form-group">
+
+              <label class="control-label">Command: <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="The command to run in the container."></a></label>
+              <input type="text" style='width: 90%;display: inline' class="form-control run-command" placeholder="echo Hello World!">&emsp;
+                <button class='btn btn-cmd btn-success ladda-button' type='button' data-style='slide-right' disabled><i class='fa fa-play' aria-hidden='true'></i></button>
+                <br><br>
+
+              <label class="control-label">Detach: <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Run container in the background and return a Container object."></a></label>
+              <select class="form-control run-detach">
+                  <option selected>True</option>
+                  <option>False</option>
+              </select><br>
+
+                <div id="blkioWeightDeviceInput">
+                  <label class="control-label">Blkio Weight Device:
+                      <span class="label label-default label-blkio-weight-device" style="cursor:pointer;"><i class="fa fa-plus-circle"></i> add options</span>
+                      <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Block IO weight (relative device weight)."></a></label>
+                  <input type="text" class="form-control run-blkio-weight-device" placeholder="Path=device_path">
+                </div>
+                <br>
+
+              <label class="control-label">Blkio Weight: <a class="fa fa-question-circle fa-1x" data-toggle="tooltip" data-placement="right" title="Block IO weight (relative weight), accepts a weight value between 10 and 1000."></a></label>
+              <input type="text" class="form-control run-blkio-weight" placeholder="100"><br>
+
+            </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+          <button class='btn btn-run btn-success ladda-button' data-style='slide-right' ><i class='fa fa-play fa-1x'></i> Run</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+    <script src="/static/jquery/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/metisMenu/metisMenu.min.js"></script>
+    <script src="/static/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/static/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="/static/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="/static/dist/js/controller.js"></script>
+    <script src="/static/dist/js/spin.min.js"></script>
+    <script src="/static/dist/js/ladda.min.js"></script>
+    <script>
+
+        var imageList = {{ images|safe }}
+        $(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+        function removeHtmls(htmls) {
+            htmls.parentNode.remove();
+        }
+
+        for(var i=0;i<imageList.length;i++){
+            var idTmp = imageList[i].Id.substring(7,19);
+            $("#image_list").append("<tr class='odd gradeX'><td><a style='cursor:pointer;' onclick=imageOper('" +
+                               idTmp + "')>" + imageList[i].RepoTags + "</a></td><td>" + idTmp +
+                                "</td><td>" + imageList[i].Created + "</td><td class='center'>" + imageList[i].Size + "</td></tr>");
+        }
+
+
+        $('#dataTables').DataTable({
+            responsive: true
+        });
+
+
+        $(".label-blkio-weight-device").click(function () {
+            $("#blkioWeightDeviceInput").append("<div><br><input type='text' style='width: 90%;display: inline' class='form-control run-blkio-weight-device' placeholder='Path=device_path'>&emsp;" +
+                        "<button class='btn btn-sm btn-danger' type='button' onclick='removeHtmls(this)'><i class='fa fa-trash' aria-hidden='true'></i></button><br></div>");
+        });
+
+
+        function imageOper(imageId) {
+            $("#myModalLabel").text(imageId + " Run:");
+            $('#myModal').modal('show');
+            var modalDOM = $(".modal-body");
+
+            $(".run-command").on("input",function(){
+              if($(this).val().trim().length){
+                $(".btn-cmd").removeAttr("disabled");
+              }else{
+                $(".btn-cmd").prop("disabled","disabled");
+              }
+            });
+
+
+            $(".btn-cmd").click(function () {
+                var l = Ladda.create( document.querySelector( '.btn-cmd' ) );
+                l.toggle();
+                $.ajax({
+                    url:"/images/",
+                    data:{opt:'runCmd', imageId:imageId, cmd:$(".run-command").val()},
+                    type:'POST',
+                    success:function(flag) {
+                        l.toggle();
+                        if(flag !== "false"){
+                            alert(flag);
+                        }else{
+                            alert(imagesId + " Command Error");
+                        }
+                    }
+                });
+            });
+
+            $(".btn-run").click(function () {
+                var l = Ladda.create( document.querySelector( '.btn-run' ) );
+                l.toggle();
+                var run_image_keys = ['run-command',
+                                        'run-detach',
+                                        'run-blkio-weight-device',
+                                        'run-blkio-weight'];
+                var attrsTmp = {};
+                attrsTmp['blkio_weight_device'] = [];
+                for(var i=0;i<run_image_keys.length;i++){
+                    if(run_image_keys[i] == 'run-blkio-weight-device'){
+                        var blkioWeightDeviceHtmls = $(".run-blkio-weight-device");
+                        for(var j=0;j<blkioWeightDeviceHtmls.length;j++){
+                            attrsTmp['blkio_weight_device'].push(blkioWeightDeviceHtmls[j].value);
+                        }
+                        continue
+                    }
+                    attrsTmp[run_image_keys[i].replace(/-/g,"_")] = $("." + run_image_keys[i]).val();
+                }
+                $.ajax({
+                    url:"/images/",
+                    data:{opt:'run', imageId:imageId, cmdAttrs:JSON.stringify(attrsTmp)},
+                    type:'POST',
+                    success:function(flag) {
+                        l.toggle();
+                        if(flag.substring(0,4) === 'csId'){
+                            window.location.href = "/containers/?" + flag;
+                        }else{
+                            alert(flag);
+                        }
+                    }
+                });
+            });
+        }
+
+    </script>
+</body>
+
+</html>

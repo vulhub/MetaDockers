@@ -1,0 +1,34 @@
+<table width="100%" class='table table-striped'>
+        <thead>
+        <tr>
+            <th>Id <i class="fa fa-list-ol fa-1x"></i></th>
+            <th>Name <i class="fa fa-tags fa-1x"></i></th>
+            <th>Image <i class="fa fa-server fa-1x"></i></th>
+            <th>State <i class="fa fa-cog fa-1x"></i></th>
+        </tr>
+        </thead>
+        <tbody id='container_list'></tbody>
+    </table>
+<script>
+    var cs = {{ csList|safe }}
+    var state_color = {"running":["label-success","fa-heartbeat"],
+                        "exited":["label-default","fa-stop"],
+                        "created":["label-primary","fa-eject"],
+                        "paused":["label-warning","fa-pause"]};
+
+    $().ready(function(){
+        for(var i=0; i<cs.length; i++){
+            $("#container_list").append("<tr><td><a style='cursor:pointer;' onclick=loadDetail('" +
+                    cs[i].Id + "')>" + cs[i].Id + "</a></td>" +
+                    "<td>" + cs[i].Name + "</td>" +
+                    "<td>" + cs[i].Image + "</td>" +
+                    "<td><span class='label " + state_color[cs[i].State][0] +
+                    "'><i class='fa " + state_color[cs[i].State][1] + " fa-1x'></i> " + cs[i].State + "</span></td></tr>");
+        }
+
+        $(".table-striped").DataTable({
+            responsive: true,
+           "aaSorting": [[3,'desc']]
+        });
+    });
+</script>

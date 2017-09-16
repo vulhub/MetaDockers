@@ -1,0 +1,155 @@
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header"><i class="fa fa-sitemap fa-1x"></i> Networks</h1>
+        <button class="btn btn-primary" data-toggle='modal' data-target='#addNetworkModal'><i class="fa fa-plus fa-1x"></i> Add Network</button>
+        <button class="btn btn-danger" data-toggle='modal' data-target='#rmNetworkModal'><i class="fa fa-trash fa-1x"></i> Remove</button>
+    </div>
+</div>
+<div class="panel-body" id="contentDiv">
+    <table width="100%" class="table table-striped">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="checkAll" name="checkAll" /></th>
+                <th>Id <i class="fa fa-list-ol fa-1x"></i></th>
+                <th>Name <i class="fa fa-tags fa-1x"></i></th>
+                <th>Driver <i class="fa fa-cog fa-1x"></i></th>
+                <th>IPAM Driver <i class="fa fa-cog fa-1x"></i></th>
+                <th>IPAM Subnet <i class="fa fa-sitemap fa-1x"></i></th>
+                <th>IPAM Gateway <i class="fa fa-sitemap fa-1x"></i></th>
+                <th>Scope <i class="fa fa-map-marker fa-1x"></i></th>
+            </tr>
+        </thead>
+        <tbody id="networks_line"></tbody>
+    </table>
+</div>
+<script>
+    var dc_networks = {{ networks|safe }}
+    $(".btn-danger").prop('disabled' ,true);
+
+    function checkboxUseSum() {
+        var checkChild = $("input[name='checkItem']");
+        var operList = [];
+        for(var i=0;i<checkChild.length;i++){
+            if(checkChild[i].checked == true){
+                operList.push(checkChild[i].value);
+            }
+        }
+        return operList
+    }
+
+    function bottonState() {
+        var operList = checkboxUseSum();
+        $(".btn-danger").prop('disabled' , operList.length > 0 ? false : true);
+    }
+
+    $().ready(function () {
+        for(var i=0;i<dc_networks.length;i++){
+            var id_tmp = dc_networks[i].Id;
+            $("#networks_line").append("<tr><td><input type='checkbox' name='checkItem' onclick='bottonState()' value='" + id_tmp +
+                                "'/></td><td><a style='cursor:pointer;' onclick=loadDetail('" + id_tmp + "')>" +
+                                    id_tmp + "</a></td><td>" + dc_networks[i].Name +
+                                    "</td><td>" + dc_networks[i].Driver +
+                                    "</td><td>" + dc_networks[i].IPAM_Driver +
+                                    "</td><td>" + dc_networks[i].IPAM_Subnet +
+                                    "</td><td>" + dc_networks[i].IPAM_Gateway +
+                                    "</td><td>" + dc_networks[i].Scope +
+                                    "</td></tr>");
+        }
+
+        $(".add-submit").click(function () {
+                var new_network_keys = ['network-name',
+                                        'network-driver',
+                                        'network-options',
+                                        'network-subnet',
+                                        'network-gateway',
+                                        'network-check-duplicate',
+                                        'network-internal',
+                                        'network-labels',
+                                        'network-enable-ipv6'];
+
+                var results_attrs = {};
+                results_attrs['options'] = [];
+                results_attrs['labels'] = [];
+                for(var i=0;i<new_network_keys.length;i++){
+                    if(new_network_keys[i] == 'network-options'){
+                        var optionsHtmls = $(".new-network-options");
+                        for(var j=0;j<optionsHtmls.length;j++){
+                            results_attrs['options'].push(optionsHtmls[j].value);
+                        }
+                        continue
+                    }else if(new_network_keys[i] == 'network-labels'){
+                        var labelsHtmls = $(".new-network-labels");
+                        for(var x=0;x<labelsHtmls.length;x++){
+                            results_attrs['labels'].push(labelsHtmls[x].value);
+                        }
+                        continue
+                    }
+                    results_attrs[new_network_keys[i].substring(8,new_network_keys[i].length).replace(/-/g,"_")] = $(".new-" + new_network_keys[i]).val();
+                }
+
+                $.ajax({
+                    url:"/networkList/",
+                    data:{opt:'add_network', addDetail:JSON.stringify(results_attrs)},
+                    type:'POST',
+                    success:function(flag) {
+                        if(flag == 'true'){
+                            alert("Add Success!");
+                        }else{
+                            alert(flag);
+                        }
+                        window.location.href = "/networks/";
+                    }
+                });
+
+            });
+
+            $(".btn-danger").click(function () {
+                var insertBody = $(".rm-body");
+                insertBody.html("");
+                var delList = checkboxUseSum();
+                for(var i=0;i<delList.length;i++){
+                    insertBody.append("[" + i + "] " + delList[i] + "<br>");
+                }
+
+                $(".rm-submit").click(function () {
+                    $.ajax({
+                    url:"/networkList/",
+                    data:{opt:'rm_network', rmList:JSON.stringify(delList)},
+                    type:'POST',
+                    success:function(flag) {
+                        if(flag == 'true'){
+                            alert("Remove Success!");
+                        }else{
+                            alert(flag);
+                        }
+                        window.location.href = "/networks/";
+                    }
+                });
+                });
+            });
+
+            var $thr = $('table thead tr');
+            var $tbr = $('table tbody tr');
+            var $checkAll = $thr.find('input');
+
+            $checkAll.click(function(event){
+                $tbr.find('input').prop('checked',$(this).prop('checked'));
+                bottonState();
+                event.stopPropagation();
+            });
+
+            $("#checkAll").click(function(){
+                $(this).find('input').click();
+
+            });
+
+            $tbr.find('input').click(function(event){
+                event.stopPropagation();
+            });
+
+            $tbr.click(function() {
+                $(this).find('input').click();
+            });
+
+    })
+</script>

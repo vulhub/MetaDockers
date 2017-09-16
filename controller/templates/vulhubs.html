@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>MetaDockers</title>
+
+    <link href="/static/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/datatables-plugins/dataTables.bootstrap.css" rel="stylesheet">
+    <link href="/static/dist/css/controller.css" rel="stylesheet">
+    <link href="/static/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+</head>
+
+<body>
+
+    <div>
+
+        <nav class="navbar navbar-light bg-faded">
+          <a class="navbar-brand" href="/index/">MetaDockers</a>
+          <ul class="nav navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="/index/"><i class="fa fa-home fa-1x"></i> Home</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/vulhubs/"><i class="fa fa-user-secret fa-1x"></i> Vulhubs</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/images/"><i class="fa fa-server fa-1x"></i> Images</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/networks/"><i class="fa fa-sitemap fa-1x"></i> Networks</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="/volumes/"><i class="fa fa-file-archive-o fa-1x"></i> Volumes</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/containers/"><i class="fa fa-cubes fa-1x"></i> Containers</a>
+            </li>
+          </ul>
+
+        <nav class="collapse navbar-collapse" id=bs-navbar>
+
+            <ul class="nav navbar-nav navbar-right">
+                <li class="nav-item">
+                    <a class="nav-link" href="/info/"><i class="fa fa-info-circle fa-1x"></i> Info</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about/"><i class="fa fa-copyright fa-1x"></i> About</a>
+                </li>
+            </ul>
+              </nav>
+        </nav>
+    </div>
+
+        <div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><i class="fa fa-user-secret fa-1x"></i> Vulhubs</h1>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Vulhub Advanced Tables
+                        </div>
+                        <div class="panel-body">
+                            <table width="100%" class="table table-striped" id="dataTables">
+                                <thead>
+                                    <tr>
+                                        <th>Name <i class="fa fa-tags fa-1x"></i></th>
+                                        <th>Engine <i class="fa fa-tasks fa-1x"></i></th>
+                                        <th>State <i class="fa fa-download fa-1x"></i></th>
+                                        <th>Author <i class="fa fa-user fa-1x"></i></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a in vulhubs %}
+                                    <tr>
+                                        <td>
+                                            <a href="#">{{ a.name }}</a></td>
+
+                                        </td>
+                                        <td>
+                                            <div class="tooltip-demo">
+                                                {% for d in a.engine %}
+                                                {% if d.1 == "true" %}
+                                                <a class="label label-success">{{ d.0 }}</a>
+                                                {% else %}
+                                                <a class="label label-default">{{ d.0 }}</a>
+                                                {% endif %}
+                                                {% endfor %}
+                                            </div>
+                                        </td>
+                                        {% if a.state == "Ready" %}
+                                        <td class="center"><a class="label label-primary">{{ a.state }}</a></td>
+                                        {% else %}
+                                        <td class="center"><a class="label label-warning">{{ a.state }}</a></td>
+                                        {% endif %}
+                                        <td class="center">{{ a.author }}</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="/static/jquery/jquery.min.js"></script>
+    <script src="/static/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/static/metisMenu/metisMenu.min.js"></script>
+    <script src="/static/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="/static/datatables-plugins/dataTables.bootstrap.min.js"></script>
+    <script src="/static/datatables-responsive/dataTables.responsive.js"></script>
+    <script src="/static/dist/js/controller.js"></script>
+
+    <script>
+    $(document).ready(function() {
+        $('#dataTables').DataTable({
+            responsive: true
+        });
+    });
+    </script>
+
+</body>
+
+</html>

@@ -1,0 +1,160 @@
+<html>
+    <ul class="breadcrumb">
+      <li><a style="cursor:pointer;" onclick="loadContainer()">Containers</a></li>
+      <li class="active" id="csId"></li>
+    </ul>
+
+    <p>
+        <button class="btn btn-start btn-success ladda-button" data-style="slide-right" ><i class="fa fa-play fa-1x"></i> Start</button>
+        <button class="btn btn-pause btn-default ladda-button" data-style="slide-right" ><i class="fa fa-pause fa-1x"></i> Pause</button>
+        <button class="btn btn-stop btn-warning ladda-button" data-style="slide-right" ><i class="fa fa-stop fa-1x"></i> Stop</button>
+        <button class="btn btn-kill btn-danger ladda-button" data-style="slide-right" ><i class="fa fa-bomb fa-1x"></i> Kill</button>
+        <button class="btn btn-restart btn-primary ladda-button" data-style="slide-right" ><i class="fa fa-refresh fa-1x"></i> Restart</button>
+        <button class="btn btn-remove btn-danger ladda-button" data-style="slide-right" ><i class="fa fa-trash fa-1x"></i> Remove</button>
+        <button class="btn btn-logs btn-primary"><i class="fa fa-file fa-1x"></i> Logs</button>
+        <button class="btn btn-info"><i class="fa fa-info-circle fa-1x"></i> Info</button>
+    </p>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            <span class="sr-only">Close</span>
+          </button>
+          <h4 class="modal1-title" id="exampleModalLabel"></h4>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-group">
+              <label for="new-name" class="control-label">New Name:</label>
+              <input type="text" class="form-control" id="new-name">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn-change btn btn-primary ladda-button" data-style="slide-right">Change</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <table class="table table-striped">
+        <tbody id="table-each">
+        </tbody>
+    </table>
+    <div id="cs_detailBox"></div>
+
+    <link href="/static/jquery/jquery.jsonview.css" rel="stylesheet">
+    <script src="/static/jquery/jquery.jsonview.js"></script>
+
+    <script>
+        var cs_detail = {{ csDetail|safe }}
+        $("#csId").text(cs_detail.Id);
+        var csId = cs_detail.Id.substring(0,12);
+        var cs_detailBox = $('#cs_detailBox');
+        var cs_state = cs_detail.State.Status;
+
+        if(cs_state == 'running'){
+            $(".btn-start").prop('disabled', true);
+        }else if(cs_state == 'paused'){
+            var btn_default = $(".btn-default");
+            btn_default.text("unPause");
+            $(".btn-start, .btn-stop, .btn-kill, .btn-restart, .btn-remove").prop('disabled', true);
+        }else if(cs_state == 'exited' || cs_state == 'created'){
+            $(".btn-stop, .btn-restart, .btn-kill, .btn-pause").prop('disabled', true);
+        }
+
+        var portConHtml = [];
+        var ports_tmp = cs_detail.inPorts;
+
+        for(var i=0;i<ports_tmp.length;i++){
+            if(ports_tmp[i].indexOf('->') != -1){
+                var portHref = ports_tmp[i].substring(0,ports_tmp[i].indexOf('->'));
+                portConHtml.push("<a href='http://" + portHref + "' target='_blank'>" + ports_tmp[i] + "</a>");
+            }else{
+                portConHtml.push(ports_tmp[i]);
+            }
+        }
+
+
+        $().ready(function () {
+            var cs_name = cs_detail.Name.substring(1,cs_detail.Name.length);
+            var htmltxt = "<tr><td>Name:</td><td>" + cs_name +
+                    "&nbsp;&nbsp;<a class='editClass' style='cursor:pointer;' data-toggle='modal' data-target='#exampleModal'>Edit <i class='fa fa-edit fa-1x'></i></a></td></tr>" +
+                    "<tr><td>Created</td><td>" + cs_detail.Created + "</td></tr>" +
+                    "<tr><td>IPAddress:</td><td>" + cs_detail.ip + "</td></tr>" +
+                    "<tr><td>Ports:</td><td>" + portConHtml + "</td></tr>" +
+                    "<tr><td>Command:</td><td>" + cs_detail.Path + " " + cs_detail.Args.join(' ') + "</td></tr>";
+
+            $("#table-each").html(htmltxt);
+            $(".table-striped").width("58%");
+            $(".modal1-title").text("Edit " + csId + " Name");
+            $("#new-name").attr("placeholder",cs_name);
+
+            $(".modal-body").keydown(function () {
+               if(event.keyCode == "13"){
+                   $(".btn-change").click();
+               }
+            });
+
+            $(".btn-change").click(function () {
+                var cs_newname = $("#new-name").val();
+                var l = Ladda.create( document.querySelector( '.btn-change' ) );
+                l.toggle();
+                $.ajax({
+                    url:"/containerDetail/",
+                    data:{opt:'cs_rename', csId:csId, newName:cs_newname},
+                    type:'POST',
+                    success:function(flag) {
+                        l.toggle();
+                        if(flag == "true"){
+                            alert(csId + " Rename Success");
+                            window.location.href = 'containers';
+                        }else{
+                            alert(csId + " Rename Error");
+                        }
+                    }
+                });
+            });
+
+            $(".btn-info").click(function () {
+                cs_detailBox.html("");
+                arguments.callee.num = arguments.callee.num ? arguments.callee.num : 0;
+                if(++arguments.callee.num %2 == 0){
+                    cs_detailBox.html("");
+                }else{
+                    cs_detailBox.prepend("<button class='btn btn-primary btn-sm'>TOGGLE <i class='fa fa-toggle-on fa-1x'></i></button>");
+                    cs_detailBox.append("<div id='cs_detailBoxChild'></div>");
+                    $('#cs_detailBoxChild').JSONView(cs_detail).JSONView('collapse');
+                    $(".btn-sm").click(function () {
+                        $("#cs_detailBoxChild").JSONView('toggle');
+                    });
+                }
+            });
+
+            $(".btn-logs").click(function () {
+                cs_detailBox.html("");
+                arguments.callee.num = arguments.callee.num ? arguments.callee.num : 0;
+                if(++arguments.callee.num %2 == 0) {
+                    cs_detailBox.html("");
+                }else{
+                    $.ajax({
+                    url:"/containerDetail/",
+                    data:{opt:'cs_logs', csId:csId},
+                    type:'POST',
+                    success:function(content) {
+                        content = content.split("\n");
+                        for(var i=0;i<content.length;i++){
+                            cs_detailBox.append(content[i] + "<br>");
+                        }
+                    }
+                    });
+                }
+            });
+        });
+    </script>
+
+</html>
