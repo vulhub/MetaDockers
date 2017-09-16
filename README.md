@@ -11,8 +11,11 @@
 MetaDockers/controller/lib/config.conf
 
 sudo pip install -r requirements.txt
+
 cd MetaDockers/
+
 python manage.py runserver 8000
+
 ## Index:
 ![](http://7xiw31.com1.z0.glb.clouddn.com/gerggf.png)
 ## Vulhubs:
