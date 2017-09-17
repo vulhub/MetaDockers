@@ -1,6 +1,6 @@
 # MetaDockers
 
-> Docker与vulhub可视化，build ing...
+> Vulhub Team做为以收集/制作docker漏洞靶场为基础，并发展Docker相关的开发，MetaDockers用于管理vulhub以及自实现的Docker可视化。build ing...
 
 > [vulhub](https://github.com/vulhub/vulhub) - Some Docker-Compose files for vulnerabilities environment
 
