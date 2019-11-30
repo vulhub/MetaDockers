@@ -25,13 +25,13 @@ python manage.py runserver 8000
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/dsfwqe221.png)
 ## Images:
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/regregeh.png)
-> 完整的images启动参数有50多个，可以按需添加：[api文档](http://docker-py.readthedocs.io/en/stable/containers.html)加下哈哈（涉及controller/lib/dockerOperation.py的image_operation函数和templates/images.html的$(".btn-run").click）。
+> 完整的images启动参数有50多个，可以按需添加：[api文档](http://docker-py.readthedocs.io/en/stable/containers.html)（涉及controller/lib/dockerOperation.py的image_operation函数和templates/images.html的$(".btn-run").click）。
 
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/3rvyjar.png)
 ## Networks:
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/43tyo8dsf.png)
 
-> 可增加删除Networks：
+> 可增加/删除Networks：
 
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/thth.png)
 
@@ -39,7 +39,7 @@ python manage.py runserver 8000
 ## Volumes:
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/32r32r3r2.png)
 
-> 可增加删除volumes：
+> 可增加/删除volumes：
 
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/rwiubsdf.png)
 ## Containers:
@@ -61,7 +61,7 @@ python manage.py runserver 8000
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/3qrg7iqw.png)
 ## Docker Info:
 
-> 层叠太多了，直接用的json view，浏览器ctrl+f吧。
+> 层叠太多，直接用的json view，可以浏览器ctrl+f。
 
 ![](https://blog-1252048719.cos.ap-shanghai.myqcloud.com/3rb78sdfk.png)
 
