@@ -1,4 +1,4 @@
-Django===1.10b1
+Django===1.11.26
 docker===2.4.2
 dockerfile-parse===0.0.7
 dj_static
