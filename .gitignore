@@ -1,1 +1,3 @@
 *.pyc
+Dockerfile
+db.sqlite3
